@@ -1,0 +1,13 @@
+# The web interface. Run the whole application from the repo root
+# (`docker compose up --build`, which includes this file); the gateway there
+# puts this service and the API on http://localhost:8080.
+name: fe-irrigation
+
+services:
+  frontend:
+    build: .
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3000/"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
