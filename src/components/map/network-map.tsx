@@ -19,7 +19,10 @@ export interface NetworkMapProps {
   onSelectAsset: (code: string) => void;
 }
 
-const MARKER_SIZE = 30;
+// The symbol is 17px so the canal stays visible between structures; the
+// marker around it is larger to give the pointer and the focus ring room.
+const MARKER_SIZE = 24;
+const SYMBOL_SIZE = 17;
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -185,14 +188,23 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
         title: name,
         icon: L.divIcon({
           className: "asset-marker",
-          html: kindSymbol(asset.jenis, conditionHex(asset.kondisi)),
+          html: kindSymbol(asset.jenis, conditionHex(asset.kondisi), SYMBOL_SIZE),
           iconSize: [MARKER_SIZE, MARKER_SIZE],
           iconAnchor: [MARKER_SIZE / 2, MARKER_SIZE / 2],
         }),
       });
       marker.on("click", () => onSelectRef.current(asset.kode_aset));
       marker.addTo(group);
-      marker.getElement()?.setAttribute("aria-label", `Bangunan ${name}`);
+      const element = marker.getElement();
+      element?.setAttribute("aria-label", `Bangunan ${name}`);
+      // Leaflet only forwards Enter through the deprecated keypress event,
+      // which did not reach the handler above. Handle the keys directly.
+      element?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelectRef.current(asset.kode_aset);
+        }
+      });
       markers.set(asset.kode_aset, marker);
     }
 
