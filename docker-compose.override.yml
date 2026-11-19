@@ -1,7 +1,0 @@
-# Loaded automatically by `docker compose up` in this folder, and not by the
-# root compose file: it publishes the service on its own, without the gateway.
-# The pages load, but /api is only there behind the gateway.
-services:
-  frontend:
-    ports:
-      - "${FRONTEND_PORT:-3000}:3000"
