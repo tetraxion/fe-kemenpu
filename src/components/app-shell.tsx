@@ -23,8 +23,14 @@ function DataStatus() {
   if (!shown) {
     return null;
   }
+  // On a phone the header has no room for "Data siap" next to the title; a
+  // problem is still shown there, and the page body explains it as well.
+  const quiet = health.data?.status === "siap";
   return (
-    <span role="status" className={cn("inline-flex h-7 items-center rounded-md px-2.5 text-xs font-semibold", shown.tone)}>
+    <span
+      role="status"
+      className={cn("h-7 items-center rounded-md px-2.5 text-xs font-semibold", quiet ? "hidden sm:inline-flex" : "inline-flex", shown.tone)}
+    >
       {shown.label}
     </span>
   );
