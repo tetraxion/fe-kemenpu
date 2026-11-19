@@ -188,6 +188,17 @@
   color: var(--foreground);
 }
 
+/* Leaflet's 30px zoom buttons are too small for a finger. */
+@media (max-width: 1023px) {
+  .leaflet-touch .leaflet-bar a,
+  .leaflet-bar a {
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 22px;
+  }
+}
+
 /* Structure symbols are HTML markers, so they take keyboard focus. */
 .asset-marker {
   display: flex;

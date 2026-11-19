@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Irrigation Frontend
 
-## Getting Started
+Web interface of the *Kondisi Jaringan Irigasi* assignment (part E). It shows the network map, the downstream impact of each structure, the maintenance priority list, the canal length recap and the data-quality findings, all read from the backend API.
 
-First, run the development server:
+Stack: Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui (Base UI), TanStack Query, Leaflet.
+
+## Run
+
+From this folder, with the backend already running (`make up` in `../backend`):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+make up                        # or: docker compose up --build -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The interface is at `http://localhost:8080`. This is its own Compose project, `fe-irrigation`, with two containers: `frontend` (the Next.js server) and `gateway` (nginx). The gateway serves the interface and forwards `/api`, `/swagger` and `/scalar` to the backend project through the port that project publishes on the host (`BACKEND_URL`, default `http://host.docker.internal:8081`). The browser therefore always calls the API with a relative `/api` address.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Without the backend the pages still open, and `/api` answers `503` with a JSON error until it is started.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+For development:
 
-## Learn More
+```bash
+make install
+make dev                       # http://localhost:3000, /api is proxied to API_PROXY_TARGET
+```
 
-To learn more about Next.js, take a look at the following resources:
+No environment variable is required. `.env.example` lists the three that exist.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command | Does |
+| --- | --- |
+| `make up` | build the images and start the interface with its gateway |
+| `make down` | stop and remove the containers |
+| `make logs` | follow the frontend and gateway logs |
+| `make install` | `npm ci` |
+| `make dev` | development server |
+| `make build` | production build (`.next/standalone`) |
+| `make lint` | ESLint |
+| `make typecheck` | TypeScript, no output |
+| `make test` | unit tests (Vitest) |
+| `make docker-build` | build the container images |
 
-## Deploy on Vercel
+## Layout
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```text
+src/app/                   routes: / (map), /prioritas, /rekap-saluran, /kualitas-data
+src/components/
+  app-shell.tsx            sidebar, header, skip link
+  import-gate.tsx          waits for GET /api/health to answer "siap"
+  follow-up-import.tsx     dialog around POST /api/impor/susulan
+  map/                     the Leaflet map, its legend, and the map page
+  asset/                   list and detail of a structure
+  priority/ canal/ quality/   one folder per page
+  states.tsx               loading, empty and error states shared by every view
+  ui/                      shadcn/ui components, added with the shadcn CLI
+src/lib/                   API client, types, labels, formatting, map styling, unit tests
+gateway/                   nginx image: one address for the interface and the API
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Design
+
+The visual language follows the SIMRS SPKD dashboard: navy sidebar, teal actions, Inter, 8px radius, tables with a tinted head and alternating rows. Two colours differ from it on purpose, both for contrast: the action teal is `#00747c` instead of `#008d96` (white text reaches 5.5:1 instead of 4.0:1), and muted text is `#566a79` instead of `#647887`.
+
+- **Colour is never the only signal.** Canal condition also changes the dash pattern, canal level the line width, structure type the symbol shape, and every badge carries its wording.
+- **Light theme only.** The condition colours are tuned against a light base map.
+- **Every data view has a loading, an empty and an error state.**
+- **Keyboard.** Structure symbols on the map take focus and open with Enter or Space; the list next to the map reaches the same structures, including those without coordinates.
+- **The map is driven through Leaflet directly**, without a React binding: the map is created and removed in one effect and each layer has its own, so a change of selection redraws only what changed.
+- **No logo.** None was supplied, so the product name stands in as text.
+- **Base map tiles come from OpenStreetMap** and need internet access. Without it the canals, structures, plots and legend still render on a plain background.
