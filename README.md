@@ -47,7 +47,7 @@ src/app/                   routes: / (map), /prioritas, /rekap-saluran, /kualita
 src/components/
   app-shell.tsx            sidebar, header, skip link
   import-gate.tsx          waits for GET /api/health to answer "siap"
-  follow-up-import.tsx     dialog around POST /api/impor/susulan
+  follow-up-import.tsx     dialog around POST /api/impor/susulan (data folder, or an uploaded .xlsx)
   map/                     the Leaflet map, its legend, and the map page
   asset/                   list and detail of a structure
   priority/ canal/ quality/   one folder per page
