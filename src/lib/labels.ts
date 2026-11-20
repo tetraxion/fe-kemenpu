@@ -30,7 +30,6 @@ export const LEVEL_LABELS: Record<string, string> = {
   sekunder: "Sekunder",
 };
 
-/** What a flag on a structure or plot means for the person reading it. */
 export const FLAG_NOTES: Record<string, { label: string; note: string }> = {
   koordinat_tidak_valid: {
     label: "Koordinat tidak valid",
@@ -50,7 +49,7 @@ export const FLAG_NOTES: Record<string, { label: string; note: string }> = {
   },
 };
 
-/** The eleven categories the assignment requires, in the order it lists them. */
+/** In the order the assignment lists them. */
 export const REQUIRED_CATEGORIES = [
   "koordinat_utm_dikonversi",
   "koordinat_tertukar_dibetulkan",
@@ -88,7 +87,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   berkas_tidak_terbaca: "Berkas tidak terbaca",
 };
 
-/** A readable name for any category, including ones this list does not know. */
 export function categoryLabel(category: string): string {
   const known = CATEGORY_LABELS[category];
   if (known) {

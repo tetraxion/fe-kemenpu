@@ -6,7 +6,6 @@ export interface NavItem {
   icon: LucideIcon;
 }
 
-// Each icon names what the page shows: a map, a ranked list, lengths, a check of the data.
 export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Peta jaringan", icon: Map },
   { href: "/prioritas", label: "Prioritas pemeliharaan", icon: ListOrdered },

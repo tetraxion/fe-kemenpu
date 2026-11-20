@@ -1,7 +1,6 @@
 import type { AssetKind, Condition } from "@/lib/types";
 
-// The map never relies on colour alone: canal condition also changes the dash
-// pattern, canal level the line width, and structure type the symbol shape.
+// Colour is never the only cue: condition sets the dash, level the width, type the shape.
 
 export const CONDITION_COLORS: Record<Condition, string> = {
   baik: "var(--map-good)",
@@ -12,7 +11,7 @@ export const CONDITION_COLORS: Record<Condition, string> = {
 
 export const UNKNOWN_COLOR = "var(--map-unknown)";
 
-/** Hex values of the same colours, for Leaflet paths (SVG attributes cannot read CSS variables). */
+/** Hex copies for Leaflet paths: SVG attributes cannot read CSS variables. */
 export const CONDITION_HEX: Record<Condition, string> = {
   baik: "#2e8b57",
   rusak_ringan: "#d9a514",
@@ -48,7 +47,7 @@ export function levelWeight(level: string | null): number {
   return (level && LEVEL_WEIGHT[level]) || 3.5;
 }
 
-// One shape per structure type, drawn in a 24 x 24 box.
+// drawn in a 24 x 24 box
 const KIND_SHAPES: Record<AssetKind, string> = {
   bendung: '<rect x="4" y="4" width="16" height="16" rx="1.5"/>',
   bangunan_bagi: '<path d="M12 2.5 21.5 12 12 21.5 2.5 12Z"/>',
@@ -59,7 +58,6 @@ const KIND_SHAPES: Record<AssetKind, string> = {
 
 const UNKNOWN_SHAPE = '<path d="M7 3h10l4 9-4 9H7l-4-9Z"/>';
 
-/** The symbol of a structure type as an SVG string, filled with the given colour. */
 export function kindSymbol(kind: string | null, fill: string, size = 22): string {
   const shape = kind && kind in KIND_SHAPES ? KIND_SHAPES[kind as AssetKind] : UNKNOWN_SHAPE;
   return (

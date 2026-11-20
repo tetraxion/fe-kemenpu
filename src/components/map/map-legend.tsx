@@ -24,8 +24,7 @@ function AreaSample({ color, opacity }: { color: string; opacity: number }) {
 
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    // Not headings: the legend sits before the page title in the document, and
-    // headings here would put it ahead of that title in the outline.
+    // not headings: they would precede the page title in the outline
     <div className="flex flex-col gap-1.5">
       <p className="text-xs font-semibold text-brand">{title}</p>
       <ul aria-label={title} className="flex flex-col gap-1.5">
@@ -44,11 +43,8 @@ function Row({ sample, label }: { sample: React.ReactNode; label: string }) {
   );
 }
 
-/** Explains every colour, dash pattern, line width and symbol used on the map. */
 export function MapLegend() {
-  // Open on a wide screen. On a phone it would cover most of the map, so it
-  // starts folded there. This component only renders in the browser, after
-  // the map layers have loaded, so reading the viewport here is safe.
+  // starts folded on phones; client-only, so window is available
   const [open, setOpen] = useState(() => window.matchMedia("(min-width: 1024px)").matches);
   const panelId = useId();
 

@@ -162,7 +162,6 @@ function History({ reports }: { reports: Report[] }) {
   );
 }
 
-/** Latest condition, flags, downstream impact and report history of one structure. */
 export function AssetDetail({
   code,
   highlighted,
@@ -177,8 +176,7 @@ export function AssetDetail({
   const detail = useQuery({ queryKey: queryKeys.asset(code), queryFn: () => api.asset(code) });
   const impact = useQuery({ queryKey: queryKeys.impact(code), queryFn: () => api.impact(code) });
 
-  // Opening a structure from the map moves focus to its heading, so keyboard
-  // and screen-reader users land on what they just opened.
+  // move focus to the heading for keyboard and screen-reader users
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });

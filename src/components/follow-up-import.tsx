@@ -27,7 +27,7 @@ const RESULT_ROWS = [
 
 type Source = "folder" | "upload";
 
-/** Why a chosen file cannot be sent, or null when it can. */
+/** Returns null when the file can be sent. */
 function fileProblem(file: File | null): string | null {
   if (!file) {
     return null;
@@ -41,11 +41,6 @@ function fileProblem(file: File | null): string | null {
   return null;
 }
 
-/**
- * Imports the follow-up reports (part F) and refreshes everything derived from
- * the reports. The file in the server's data folder is the default; uploading
- * one from this computer is the alternative.
- */
 export function FollowUpImport() {
   const queryClient = useQueryClient();
   const fieldId = useId();
@@ -55,7 +50,7 @@ export function FollowUpImport() {
 
   const mutation = useMutation({
     mutationFn: () => api.importFollowUp(source === "upload" && file ? file : undefined),
-    // Conditions, priorities and findings all depend on the reports.
+    // every query depends on the reports
     onSuccess: () => queryClient.invalidateQueries(),
   });
 

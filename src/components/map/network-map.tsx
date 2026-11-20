@@ -11,16 +11,14 @@ import type { Asset, CanalCollection, PlotCollection } from "@/lib/types";
 export interface NetworkMapProps {
   canals: CanalCollection;
   plots: PlotCollection;
-  /** Structures to draw. Those without coordinates are skipped. */
+  /** Those without coordinates are skipped. */
   assets: Asset[];
   selectedCode: string | null;
-  /** Codes of the plots to emphasise, or null when nothing is highlighted. */
   highlightedPlots: ReadonlySet<string> | null;
   onSelectAsset: (code: string) => void;
 }
 
-// The symbol is 17px so the canal stays visible between structures; the
-// marker around it is larger to give the pointer and the focus ring room.
+// marker is larger than the symbol: room for the pointer and focus ring
 const MARKER_SIZE = 24;
 const SYMBOL_SIZE = 17;
 
@@ -37,22 +35,18 @@ function plotStyle(code: string, highlighted: ReadonlySet<string> | null): L.Pat
   if (highlighted?.has(code)) {
     return { color: IMPACT_HEX, weight: 2.5, fillColor: IMPACT_HEX, fillOpacity: 0.45 };
   }
-  // With a highlight active the other plots step back, so the impacted ones read first.
+  // other plots fade while a highlight is active
   return { color: PLOT_HEX, weight: 1, fillColor: PLOT_HEX, fillOpacity: highlighted ? 0.06 : 0.18 };
 }
 
-/**
- * The network map. Leaflet is driven directly instead of through a React
- * binding: the map is created and removed in one effect, and each layer has
- * its own effect, so a change to the selection redraws only what changed.
- */
+/** Leaflet is driven directly, one effect per layer. */
 export default function NetworkMap({ canals, plots, assets, selectedCode, highlightedPlots, onSelectAsset }: NetworkMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const plotLayerRef = useRef<L.GeoJSON | null>(null);
   const markersRef = useRef(new Map<string, L.Marker>());
   const fittedRef = useRef(false);
-  // The latest callback, so markers do not need rebuilding when it changes.
+  // latest callback, so markers are not rebuilt when it changes
   const onSelectRef = useRef(onSelectAsset);
   useEffect(() => {
     onSelectRef.current = onSelectAsset;
@@ -69,14 +63,14 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
-    // Fixed drawing order: plots below canals, canals below structures.
+    // drawing order: plots, canals, structures
     map.createPane("plots").style.zIndex = "410";
     map.createPane("canals").style.zIndex = "420";
     map.createPane("assets").style.zIndex = "610";
     mapRef.current = map;
     fittedRef.current = false;
 
-    // The map sits in a flexible layout; tell Leaflet whenever its box changes.
+    // Leaflet does not track container resizes
     const observer = new ResizeObserver(() => map.invalidateSize());
     observer.observe(container);
 
@@ -197,8 +191,7 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
       marker.addTo(group);
       const element = marker.getElement();
       element?.setAttribute("aria-label", `Bangunan ${name}`);
-      // Leaflet only forwards Enter through the deprecated keypress event,
-      // which did not reach the handler above. Handle the keys directly.
+      // Leaflet only forwards Enter through the deprecated keypress event
       element?.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
@@ -219,7 +212,7 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
     };
   }, [assets]);
 
-  // Selection: mark the symbol and bring it into view.
+  // Selection
   useEffect(() => {
     const map = mapRef.current;
     for (const [code, marker] of markersRef.current) {
@@ -233,7 +226,7 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
     }
   }, [selectedCode, assets]);
 
-  // Show every impacted plot when the highlight is switched on.
+  // Fit to impacted plots
   useEffect(() => {
     const map = mapRef.current;
     const layer = plotLayerRef.current;
@@ -254,7 +247,7 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
     if (bounds.isValid()) {
       map.fitBounds(bounds.pad(0.1), { animate: !prefersReducedMotion(), maxZoom: 15 });
     }
-    // Only the highlight itself moves the view; a later selection is handled above.
+    // only the highlight should move the view
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedPlots]);
 

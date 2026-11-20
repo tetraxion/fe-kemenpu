@@ -12,7 +12,6 @@ import { formatInteger } from "@/lib/format";
 import { CONDITIONS, CONDITION_LABELS, KINDS, KIND_LABELS, kindLabel } from "@/lib/labels";
 import type { Asset } from "@/lib/types";
 
-/** Search, filters and the list of structures. The same filter drives the symbols on the map. */
 export function AssetList({
   assets,
   total,

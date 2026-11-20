@@ -6,13 +6,11 @@ import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
-/** The navy navigation column. Used by the desktop sidebar and the mobile drawer. */
 export function SideNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
     <div className="scrollbar-thin flex h-full flex-col gap-6 overflow-y-auto bg-sidebar px-4 py-5 text-sidebar-foreground">
-      {/* No logo was supplied, so the product name stands in as text. */}
       <div className="flex flex-col gap-1 px-2.5">
         <span className="text-base leading-tight font-semibold">Kondisi Jaringan Irigasi</span>
         <span className="text-xs leading-normal text-sidebar-muted">Pemeliharaan aset irigasi</span>

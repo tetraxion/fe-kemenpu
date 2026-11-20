@@ -53,7 +53,8 @@ src/components/
   priority/ canal/ quality/   one folder per page
   states.tsx               loading, empty and error states shared by every view
   ui/                      shadcn/ui components, added with the shadcn CLI
-src/lib/                   API client, types, labels, formatting, map styling, unit tests
+src/lib/                   API client, types, labels, formatting, map styling
+tests/                     unit tests (Vitest), mirroring the folders of src/
 gateway/                   nginx image: one address for the interface and the API
 ```
 

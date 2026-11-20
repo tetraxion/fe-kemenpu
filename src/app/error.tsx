@@ -4,7 +4,6 @@ import { PageBody } from "@/components/page-body";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 
-/** Catches a rendering failure of a page, so the frame and navigation stay usable. */
 export default function PageError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <PageBody>

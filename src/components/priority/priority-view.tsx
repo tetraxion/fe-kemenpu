@@ -16,7 +16,7 @@ import { formatDecimal } from "@/lib/format";
 import { kindLabel } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 
-// The API has no upper bound on limit; this simply asks for every row.
+// the API has no upper bound on limit
 const ALL_ROWS = 100000;
 const LIMITS = [
   { value: 20, label: "20 teratas" },
@@ -24,14 +24,13 @@ const LIMITS = [
   { value: ALL_ROWS, label: "Semua" },
 ];
 
-/** Ranked maintenance list. A row leads to that structure on the map. */
 export function PriorityView() {
   const router = useRouter();
   const limitId = useId();
   const [limit, setLimit] = useState(20);
 
   const priorities = useQuery({ queryKey: queryKeys.priorities(limit), queryFn: () => api.priorities(limit) });
-  // Names and types come from the structure list; the ranking only carries codes.
+  // the ranking only carries codes; names and types come from here
   const assets = useQuery({ queryKey: queryKeys.assets, queryFn: api.assets });
   const byCode = useMemo(() => new Map(assets.data?.data.map((asset) => [asset.kode_aset, asset])), [assets.data]);
 
@@ -102,8 +101,7 @@ export function PriorityView() {
                 return (
                   <TableRow
                     key={row.kode_aset}
-                    // The whole row is a pointer target; the link in it is the
-                    // keyboard and screen-reader path to the same place.
+                    // pointer only; the link in the row is the keyboard path
                     onClick={() => router.push(href)}
                     className={cn("cursor-pointer hover:bg-brand-2-light", index % 2 === 0 ? "bg-zebra" : "bg-card")}
                   >

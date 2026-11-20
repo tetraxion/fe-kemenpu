@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { api, queryKeys } from "@/lib/api";
 import type { HealthStatus } from "@/lib/types";
 
-/** Reads GET /api/health and keeps asking while the import is still running. */
+/** Polls /api/health until the import is done. */
 export function useHealth() {
   return useQuery({
     queryKey: queryKeys.health,
@@ -18,7 +18,6 @@ export function useHealth() {
   });
 }
 
-/** Holds the pages back until the backend reports that the import has finished. */
 export function ImportGate({ children }: { children: React.ReactNode }) {
   const health = useHealth();
   const status: HealthStatus | undefined = health.data?.status;

@@ -4,9 +4,7 @@
 @import "@fontsource-variable/inter";
 @import "leaflet/dist/leaflet.css";
 
-/* The interface is light only: the condition colours are tuned against a light
-   base map. Tying `dark:` to a class that is never set keeps the dark styles
-   of the shadcn components from following the operating system. */
+/* light only: dark: is tied to a class that is never set */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -36,7 +34,6 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Brand tokens, taken from the SIMRS SPKD dashboard */
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
   --color-brand-light: var(--brand-light);
@@ -50,7 +47,6 @@
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-primary: var(--sidebar-primary);
 
-  /* Condition scale: text / tinted background, plus the stronger map colour */
   --color-good: var(--good);
   --color-good-light: var(--good-light);
   --color-minor: var(--minor);
@@ -67,8 +63,7 @@
   --brand: #06345d; /* navy: headings, sidebar */
   --brand-hover: #124465;
   --brand-light: #edf3f9;
-  /* SIMRS uses #008d96 for actions. White text on it only reaches 4.0:1, so
-     the darker teal of its hover state is the action colour here (5.5:1). */
+  /* darker than SIMRS #008d96, which gives white text only 4.0:1 */
   --brand-2: #00747c;
   --brand-2-hover: #005f66;
   --brand-2-light: #eaf6f5; /* selected row, hint box */
@@ -83,7 +78,6 @@
   --severe: #b43d43;
   --severe-light: #fceff0;
 
-  /* Line and symbol colours on the map, where they sit on a light base map */
   --map-good: #2e8b57;
   --map-minor: #d9a514;
   --map-moderate: #e0701b;
@@ -109,13 +103,13 @@
   --secondary: #edf3f9;
   --secondary-foreground: #06345d;
   --muted: #edf3f9;
-  /* Darker than SIMRS (#647887) so small text also passes 4.5:1 on --background. */
+  /* darker than SIMRS #647887 so small text passes 4.5:1 */
   --muted-foreground: #566a79;
   --accent: #edf3f9;
   --accent-foreground: #06345d;
   --destructive: #b43d43;
   --border: #dfe7eb;
-  /* Field borders need 3:1 against the surface to be seen as fields. */
+  /* field borders need 3:1 contrast */
   --input: #7d93a1;
   --ring: #00747c;
 }
@@ -132,7 +126,6 @@
     font-feature-settings: "rlig" 1, "calt" 1, "tnum" 1;
   }
 
-  /* Everything that can be used says so. */
   a[href],
   button,
   summary,
@@ -172,7 +165,7 @@
   }
 }
 
-/* ---- Leaflet, restyled to the tokens above ---- */
+/* Leaflet overrides */
 
 .leaflet-container {
   font-family: inherit;
@@ -188,7 +181,7 @@
   color: var(--foreground);
 }
 
-/* Leaflet's 30px zoom buttons are too small for a finger. */
+/* 44px tap target on touch screens */
 @media (max-width: 1023px) {
   .leaflet-touch .leaflet-bar a,
   .leaflet-bar a {
@@ -199,7 +192,7 @@
   }
 }
 
-/* Structure symbols are HTML markers, so they take keyboard focus. */
+/* markers are HTML elements and take keyboard focus */
 .asset-marker {
   display: flex;
   align-items: center;

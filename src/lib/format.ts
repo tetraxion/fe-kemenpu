@@ -11,7 +11,7 @@ export function formatInteger(value: number): string {
   return integerFormat.format(value);
 }
 
-/** "2026-08-14" becomes "14 Agu 2026". Anything that is not a date is shown as written. */
+/** "2026-08-14" becomes "14 Agu 2026". Non-dates are returned as written. */
 export function formatDate(value: string | null): string {
   if (!value) {
     return "Tanpa tanggal";
@@ -24,7 +24,7 @@ export function formatDate(value: string | null): string {
   return Number.isNaN(date.getTime()) ? value : dateFormat.format(date);
 }
 
-/** Escapes text placed into HTML that Leaflet renders (popups, tooltips). */
+/** For text placed into HTML strings that Leaflet renders. */
 export function escapeHtml(value: string): string {
   return value
     .replaceAll("&", "&amp;")

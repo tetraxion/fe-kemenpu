@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 50;
 
-/** Required categories first, in the order of the assignment; the rest by name. */
+/** Required categories first, in assignment order, then the rest by name. */
 function orderCategories(counts: CategoryCount[]): CategoryCount[] {
   const rank = (category: string) => {
     const index = REQUIRED_CATEGORIES.indexOf(category);
@@ -78,7 +78,6 @@ function matches(finding: Finding, category: string, source: string, needle: str
   return [finding.pengenal, finding.masalah, finding.tindakan].some((value) => value.toLowerCase().includes(needle));
 }
 
-/** Findings per category, and the rows behind them: source file, row, problem, action taken. */
 export function QualityView() {
   const summary = useQuery({ queryKey: queryKeys.qualitySummary, queryFn: api.qualitySummary });
   const findings = useQuery({ queryKey: queryKeys.findings, queryFn: api.findings });
@@ -105,7 +104,7 @@ export function QualityView() {
   const rows = filtered.slice(current * PAGE_SIZE, (current + 1) * PAGE_SIZE);
   const hasFilter = category !== "" || source !== "" || search !== "";
 
-  // Any change to the filters starts again from the first page.
+  // filter changes go back to the first page
   function update(change: () => void) {
     change();
     setPage(0);

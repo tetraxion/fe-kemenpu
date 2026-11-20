@@ -8,7 +8,6 @@ export interface AssetFilter {
 
 export const EMPTY_FILTER: AssetFilter = { search: "", kind: "", condition: "" };
 
-/** Keeps the structures matching the type, the condition and the search text. */
 export function filterAssets(assets: Asset[], filter: AssetFilter): Asset[] {
   const needle = filter.search.trim().toLowerCase();
   return assets.filter((asset) => {

@@ -12,10 +12,9 @@ import type {
   Priority,
 } from "@/lib/types";
 
-// Always relative: the gateway (or the dev proxy) puts the API on the same origin.
+// relative: the gateway or dev proxy serves the API on the same origin
 const API_BASE = "/api";
 
-/** An error answered by the API, or a failure to reach it at all. */
 export class ApiError extends Error {
   readonly status: number;
   readonly code: string;
@@ -28,7 +27,7 @@ export class ApiError extends Error {
   }
 }
 
-/** Multipart field and size limit of the optional follow-up upload; the server enforces both. */
+// must match the server's upload field and size limit
 const UPLOAD_FIELD = "berkas";
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
@@ -46,7 +45,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     body = await response.json();
   } catch {
-    // A non-JSON body only happens when something other than the API answered.
+    // non-JSON body: something other than the API answered
   }
 
   if (!response.ok) {
@@ -81,7 +80,7 @@ export const api = {
     }
     const form = new FormData();
     form.append(UPLOAD_FIELD, file);
-    // No Content-Type header: the browser adds the multipart boundary itself.
+    // no Content-Type: the browser sets the multipart boundary
     return request<FollowUpSummary>("/impor/susulan", { method: "POST", body: form });
   },
 };

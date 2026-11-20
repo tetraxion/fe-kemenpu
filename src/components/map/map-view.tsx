@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { api, queryKeys } from "@/lib/api";
 import { EMPTY_FILTER, filterAssets, type AssetFilter } from "@/lib/asset-filter";
 
-// Leaflet needs the browser, so the map is never rendered on the server.
+// Leaflet needs the browser
 const NetworkMap = dynamic(() => import("@/components/map/network-map"), {
   ssr: false,
   loading: () => <MapPlaceholder />,
@@ -28,7 +28,6 @@ function MapPlaceholder() {
   );
 }
 
-/** The map with its side panel: the list of structures, or the one that is open. */
 export function MapView() {
   const router = useRouter();
   const selectedCode = useSearchParams().get("aset");
@@ -43,12 +42,12 @@ export function MapView() {
   });
 
   const [filter, setFilter] = useState<AssetFilter>(EMPTY_FILTER);
-  // The highlight belongs to one structure; opening another one drops it.
+  // opening another structure drops the highlight
   const [highlightFor, setHighlightFor] = useState<string | null>(null);
   const highlighted = selectedCode !== null && highlightFor === selectedCode;
 
   const visibleAssets = useMemo(() => filterAssets(assets.data?.data ?? [], filter), [assets.data, filter]);
-  // The open structure stays on the map even when the filter would hide it.
+  // keep the open structure on the map even when filtered out
   const mapAssets = useMemo(() => {
     const selected = assets.data?.data.find((asset) => asset.kode_aset === selectedCode);
     return selected && !visibleAssets.includes(selected) ? [...visibleAssets, selected] : visibleAssets;
@@ -63,7 +62,7 @@ export function MapView() {
   const select = useCallback(
     (code: string) => {
       router.replace(`/?aset=${encodeURIComponent(code)}`, { scroll: false });
-      // On a phone the panel sits below the map; bring it into view.
+      // on phones the panel is below the map
       if (window.matchMedia("(max-width: 1023px)").matches) {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         panelRef.current?.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
@@ -77,8 +76,7 @@ export function MapView() {
   const layersReady = canals.data && plots.data;
 
   return (
-    // No flex-1 here: a flex basis would override the fixed desktop height and
-    // let the map grow as tall as the list next to it.
+    // no flex-1: it overrides the fixed desktop height
     <div className="flex flex-col lg:h-[calc(100dvh-4rem)] lg:flex-none lg:flex-row">
       <section aria-label="Peta" className="relative isolate h-[60dvh] min-h-80 shrink-0 lg:h-auto lg:min-w-0 lg:flex-1">
         {layersFailed ? (

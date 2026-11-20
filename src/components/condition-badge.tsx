@@ -10,7 +10,6 @@ const TONES: Record<string, string> = {
 
 const UNKNOWN_TONE = "bg-muted text-muted-foreground";
 
-/** The condition of a structure, canal or report. The wording carries the meaning; colour only supports it. */
 export function ConditionBadge({ condition, className }: { condition: string | null; className?: string }) {
   return (
     <span
@@ -25,7 +24,6 @@ export function ConditionBadge({ condition, className }: { condition: string | n
   );
 }
 
-/** A neutral marker for a data flag such as "jauh dari saluran". */
 export function FlagBadge({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <span

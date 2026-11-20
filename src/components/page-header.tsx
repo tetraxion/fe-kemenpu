@@ -1,4 +1,3 @@
-/** Page heading in the SIMRS style: navy title, one line of context, actions on the right. */
 export function PageHeader({
   title,
   description,

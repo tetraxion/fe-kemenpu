@@ -12,11 +12,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            // The data only changes on a follow-up import, which invalidates
-            // every query itself, so nothing needs refetching in between.
+            // data only changes on a follow-up import, which invalidates every query
             staleTime: 5 * 60 * 1000,
             refetchOnWindowFocus: false,
-            // A 4xx will not get better by asking again.
+            // no retry on 4xx
             retry: (failures, error) =>
               failures < 2 && !(error instanceof ApiError && error.status >= 400 && error.status < 500),
           },

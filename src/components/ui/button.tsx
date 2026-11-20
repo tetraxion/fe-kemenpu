@@ -19,8 +19,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        // Heights follow the SIMRS buttons (40px), and grow to a 44px tap
-        // target on small screens.
+        // 44px tap target on small screens, 40px from md up
         default:
           "h-11 gap-2 px-4 text-[13px] font-semibold md:h-10",
         xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",

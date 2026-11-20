@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { errorMessage } from "@/lib/api";
 
-/** Placeholder rows while a table or list is being fetched. */
 export function LoadingRows({ rows = 6, label }: { rows?: number; label: string }) {
   return (
     <div role="status" aria-live="polite" className="flex flex-col gap-2.5">
@@ -14,7 +13,6 @@ export function LoadingRows({ rows = 6, label }: { rows?: number; label: string 
   );
 }
 
-/** Shown when a request failed. The retry button asks again. */
 export function ErrorState({ title, error, onRetry }: { title: string; error: unknown; onRetry?: () => void }) {
   return (
     <div role="alert" className="flex flex-col items-start gap-3 rounded-lg border border-severe/30 bg-severe-light p-4">
@@ -31,7 +29,6 @@ export function ErrorState({ title, error, onRetry }: { title: string; error: un
   );
 }
 
-/** Shown when a request succeeded but there is nothing to list. */
 export function EmptyState({ title, note }: { title: string; note?: string }) {
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-dashed border-input bg-card p-6 text-center">

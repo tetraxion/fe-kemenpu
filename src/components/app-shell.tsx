@@ -23,8 +23,7 @@ function DataStatus() {
   if (!shown) {
     return null;
   }
-  // On a phone the header has no room for "Data siap" next to the title; a
-  // problem is still shown there, and the page body explains it as well.
+  // no room for the ready status on phones; problems still show
   const quiet = health.data?.status === "siap";
   return (
     <span
@@ -36,7 +35,6 @@ function DataStatus() {
   );
 }
 
-/** Application frame after the SIMRS dashboard: navy sidebar, white header, page body. */
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const ready = useHealth().data?.status === "siap";

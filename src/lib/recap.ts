@@ -18,10 +18,7 @@ function emptyRow(level: string): RecapRow {
   return { level, byCondition: { baik: 0, rusak_ringan: 0, rusak_sedang: 0, rusak_berat: 0 }, total: 0 };
 }
 
-/**
- * Turns the flat list of the API (one entry per level and condition) into one
- * row per level with a column per condition, plus a totals row.
- */
+/** One row per level, a column per condition, plus a totals row. */
 export function pivotRecap(entries: CanalRecap[]): RecapTable {
   const rows = new Map<string, RecapRow>();
   const totals = emptyRow("total");
@@ -49,7 +46,7 @@ export function pivotRecap(entries: CanalRecap[]): RecapTable {
   return { rows: ordered, totals };
 }
 
-/** Share of a part in a whole as a percentage, 0 when the whole is 0. */
+/** Percentage, 0 when the whole is 0. */
 export function share(part: number, whole: number): number {
   return whole > 0 ? (part / whole) * 100 : 0;
 }

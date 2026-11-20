@@ -26,7 +26,6 @@ function LengthCells({ row }: { row: RecapRow }) {
   );
 }
 
-/** Canal length per level and condition, after duplicate segments were dropped. */
 export function CanalRecapView() {
   const recap = useQuery({ queryKey: queryKeys.canalRecap, queryFn: api.canalRecap });
   const table = useMemo(() => pivotRecap(recap.data?.data ?? []), [recap.data]);

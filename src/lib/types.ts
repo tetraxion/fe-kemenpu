@@ -1,5 +1,4 @@
-// Shapes of the backend responses. Property names are fixed by the API
-// contract of the assignment, so they stay in Indonesian.
+// Property names follow the API contract, so they stay in Indonesian.
 
 export type Condition = "baik" | "rusak_ringan" | "rusak_sedang" | "rusak_berat";
 
