@@ -73,7 +73,7 @@ export const api = {
   findings: () => request<FindingList>("/kualitas-data/temuan"),
   canalMap: () => request<CanalCollection>("/peta/saluran"),
   plotMap: () => request<PlotCollection>("/peta/petak"),
-  /** Without a file the server reads laporan_susulan.xlsx from its data folder. */
+  // no file: the server reads its own data folder
   importFollowUp: (file?: File) => {
     if (!file) {
       return request<FollowUpSummary>("/impor/susulan", { method: "POST" });
