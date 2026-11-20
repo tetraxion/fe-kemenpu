@@ -1,11 +1,12 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { FollowUpImport } from "@/components/follow-up-import";
 import { ImportGate, useHealth } from "@/components/import-gate";
+import { PanelContext } from "@/components/panel-state";
 import { SideNav } from "@/components/side-nav";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -59,6 +60,11 @@ function CurrentPage() {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  // desktop sidebar: full width, or icons only
+  const [collapsed, setCollapsed] = useState(false);
+  // right panel of the map page
+  const [panelOpen, setPanelOpen] = useState(true);
+  const hasPanel = usePathname() === "/";
   const ready = useHealth().data?.status === "siap";
 
   return (
@@ -70,8 +76,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         Lewati ke isi halaman
       </a>
 
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 lg:block">
-        <SideNav />
+      <aside className={cn("fixed inset-y-0 left-0 z-40 hidden transition-[width] lg:block", collapsed ? "w-16" : "w-60")}>
+        <SideNav collapsed={collapsed} />
       </aside>
 
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
@@ -82,7 +88,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </SheetContent>
       </Sheet>
 
-      <div className="flex min-w-0 flex-1 flex-col lg:pl-60">
+      <div className={cn("flex min-w-0 flex-1 flex-col transition-[padding]", collapsed ? "lg:pl-16" : "lg:pl-60")}>
         <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-card px-4 sm:px-6">
           <Button
             variant="ghost"
@@ -93,14 +99,47 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <Menu aria-hidden="true" className="size-5" />
           </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hidden lg:inline-flex"
+            aria-label={collapsed ? "Buka menu samping" : "Ciutkan menu samping"}
+            aria-expanded={!collapsed}
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? (
+              <PanelLeftOpen aria-hidden="true" className="size-5" />
+            ) : (
+              <PanelLeftClose aria-hidden="true" className="size-5" />
+            )}
+          </Button>
           <span className="min-w-0 flex-1 truncate text-sm font-semibold text-brand lg:hidden">Kondisi Jaringan Irigasi</span>
           <CurrentPage />
           <DataStatus />
           {ready ? <FollowUpImport /> : null}
+          {hasPanel ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden lg:inline-flex"
+              aria-label={panelOpen ? "Tutup panel bangunan" : "Buka panel bangunan"}
+              aria-expanded={panelOpen}
+              aria-controls="panel-bangunan"
+              onClick={() => setPanelOpen(!panelOpen)}
+            >
+              {panelOpen ? (
+                <PanelRightClose aria-hidden="true" className="size-5" />
+              ) : (
+                <PanelRightOpen aria-hidden="true" className="size-5" />
+              )}
+            </Button>
+          ) : null}
         </header>
 
         <main id="konten" tabIndex={-1} className="flex min-w-0 flex-1 flex-col outline-none">
-          <ImportGate>{children}</ImportGate>
+          <PanelContext value={{ open: panelOpen, setOpen: setPanelOpen }}>
+            <ImportGate>{children}</ImportGate>
+          </PanelContext>
         </main>
       </div>
     </div>

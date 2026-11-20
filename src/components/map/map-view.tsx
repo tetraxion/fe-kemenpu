@@ -8,10 +8,12 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { AssetDetail } from "@/components/asset/asset-detail";
 import { AssetList } from "@/components/asset/asset-list";
 import { MapLegend } from "@/components/map/map-legend";
+import { usePanel } from "@/components/panel-state";
 import { ErrorState, LoadingRows } from "@/components/states";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, queryKeys } from "@/lib/api";
 import { EMPTY_FILTER, filterAssets, type AssetFilter } from "@/lib/asset-filter";
+import { cn } from "@/lib/utils";
 
 // Leaflet needs the browser
 const NetworkMap = dynamic(() => import("@/components/map/network-map"), {
@@ -47,6 +49,8 @@ export function MapView() {
   // opening another structure drops the highlight
   const [highlightFor, setHighlightFor] = useState<string | null>(null);
   const highlighted = selectedCode !== null && highlightFor === selectedCode;
+  // desktop only: on phones the panel sits below the map
+  const { open: panelOpen, setOpen: setPanelOpen } = usePanel();
 
   const visibleAssets = useMemo(() => filterAssets(assets.data?.data ?? [], filter), [assets.data, filter]);
   // keep the open structure on the map even when filtered out
@@ -64,13 +68,14 @@ export function MapView() {
   const select = useCallback(
     (code: string) => {
       router.replace(`/?aset=${encodeURIComponent(code)}`, { scroll: false });
+      setPanelOpen(true);
       // on phones the panel is below the map
       if (window.matchMedia("(max-width: 1023px)").matches) {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         panelRef.current?.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
       }
     },
-    [router],
+    [router, setPanelOpen],
   );
   const clearSelection = useCallback(() => router.replace("/", { scroll: false }), [router]);
 
@@ -112,7 +117,11 @@ export function MapView() {
 
       <div
         ref={panelRef}
-        className="scrollbar-thin flex scroll-mt-16 flex-col gap-4 border-t border-border bg-card p-4 sm:p-5 lg:min-h-0 lg:w-[400px] lg:shrink-0 lg:overflow-y-auto lg:border-t-0 lg:border-l"
+        id="panel-bangunan"
+        className={cn(
+          "scrollbar-thin flex scroll-mt-16 flex-col gap-4 border-t border-border bg-card p-4 sm:p-5 lg:min-h-0 lg:w-[400px] lg:shrink-0 lg:overflow-y-auto lg:border-t-0 lg:border-l",
+          !panelOpen && "lg:hidden",
+        )}
       >
         {/* on desktop the top bar already shows the page name */}
         <h1 className="text-xl leading-tight font-semibold text-brand lg:sr-only">Peta jaringan</h1>
