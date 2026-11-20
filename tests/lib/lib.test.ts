@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import { escapeHtml, formatDate, formatDecimal } from "@/lib/format";
-import { categoryLabel, conditionLabel, kindLabel } from "@/lib/labels";
+import { categoryLabel, conditionLabel, kindLabel, levelLabel } from "@/lib/labels";
 import { conditionDash, conditionHex, kindSymbol, levelWeight } from "@/lib/map-style";
-import { pivotRecap, share } from "@/lib/recap";
+import { damagedLength, pivotRecap, share } from "@/lib/recap";
 
 describe("format", () => {
   it("writes decimals the Indonesian way", () => {
@@ -79,6 +79,17 @@ describe("pivotRecap", () => {
     const table = pivotRecap(entries);
     expect(table.totals.byCondition.baik).toBeCloseTo(18.24);
     expect(table.totals.total).toBeCloseTo(25.39);
+  });
+
+  it("keeps a length with an unknown condition in the totals", () => {
+    const table = pivotRecap([
+      ...entries,
+      { tingkat: "tidak_diketahui", kondisi: "tidak_diketahui" as never, panjang_km: 2 },
+    ]);
+    expect(table.totals.unknown).toBe(2);
+    expect(table.totals.total).toBeCloseTo(27.39);
+    expect(damagedLength(table.totals)).toBeCloseTo(7.15);
+    expect(levelLabel("tidak_diketahui")).toBe("Tingkat tidak dikenal");
   });
 
   it("handles an empty recap", () => {

@@ -10,10 +10,10 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 import { api, queryKeys } from "@/lib/api";
 import { formatDecimal } from "@/lib/format";
 import { CONDITIONS, CONDITION_LABELS, levelLabel } from "@/lib/labels";
-import { pivotRecap, share, type RecapRow } from "@/lib/recap";
+import { damagedLength, pivotRecap, share, type RecapRow } from "@/lib/recap";
 import { cn } from "@/lib/utils";
 
-function LengthCells({ row }: { row: RecapRow }) {
+function LengthCells({ row, showUnknown }: { row: RecapRow; showUnknown: boolean }) {
   return (
     <>
       {CONDITIONS.map((condition) => (
@@ -21,6 +21,9 @@ function LengthCells({ row }: { row: RecapRow }) {
           {formatDecimal(row.byCondition[condition])}
         </TableCell>
       ))}
+      {showUnknown ? (
+        <TableCell className={cn(BODY_CELL, "text-right")}>{formatDecimal(row.unknown)}</TableCell>
+      ) : null}
       <TableCell className={cn(BODY_CELL, "text-right font-semibold")}>{formatDecimal(row.total)}</TableCell>
     </>
   );
@@ -29,7 +32,8 @@ function LengthCells({ row }: { row: RecapRow }) {
 export function CanalRecapView() {
   const recap = useQuery({ queryKey: queryKeys.canalRecap, queryFn: api.canalRecap });
   const table = useMemo(() => pivotRecap(recap.data?.data ?? []), [recap.data]);
-  const damaged = table.totals.total - table.totals.byCondition.baik;
+  const damaged = damagedLength(table.totals);
+  const showUnknown = table.totals.unknown > 0;
 
   return (
     <PageBody>
@@ -67,6 +71,11 @@ export function CanalRecapView() {
                       {CONDITION_LABELS[condition]} (km)
                     </TableHead>
                   ))}
+                  {showUnknown ? (
+                    <TableHead scope="col" className={cn(HEAD_CELL, "text-right")}>
+                      Belum diketahui (km)
+                    </TableHead>
+                  ) : null}
                   <TableHead scope="col" className={cn(HEAD_CELL, "text-right")}>
                     Total (km)
                   </TableHead>
@@ -78,7 +87,7 @@ export function CanalRecapView() {
                     <TableHead scope="row" className={cn(BODY_CELL, "h-auto font-semibold text-foreground")}>
                       {levelLabel(row.level)}
                     </TableHead>
-                    <LengthCells row={row} />
+                    <LengthCells row={row} showUnknown={showUnknown} />
                   </TableRow>
                 ))}
               </TableBody>
@@ -87,7 +96,7 @@ export function CanalRecapView() {
                   <TableHead scope="row" className={cn(BODY_CELL, "h-auto font-semibold text-foreground")}>
                     Semua tingkat
                   </TableHead>
-                  <LengthCells row={table.totals} />
+                  <LengthCells row={table.totals} showUnknown={showUnknown} />
                 </TableRow>
               </TableFooter>
             </Table>

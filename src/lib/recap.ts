@@ -4,6 +4,8 @@ import type { CanalRecap, Condition } from "@/lib/types";
 export interface RecapRow {
   level: string;
   byCondition: Record<Condition, number>;
+  // length whose condition could not be normalised
+  unknown: number;
   total: number;
 }
 
@@ -15,7 +17,7 @@ export interface RecapTable {
 const LEVEL_ORDER = ["primer", "sekunder"];
 
 function emptyRow(level: string): RecapRow {
-  return { level, byCondition: { baik: 0, rusak_ringan: 0, rusak_sedang: 0, rusak_berat: 0 }, total: 0 };
+  return { level, byCondition: { baik: 0, rusak_ringan: 0, rusak_sedang: 0, rusak_berat: 0 }, unknown: 0, total: 0 };
 }
 
 /** One row per level, a column per condition, plus a totals row. */
@@ -24,18 +26,19 @@ export function pivotRecap(entries: CanalRecap[]): RecapTable {
   const totals = emptyRow("total");
 
   for (const entry of entries) {
-    if (!CONDITIONS.includes(entry.kondisi)) {
-      continue;
-    }
     let row = rows.get(entry.tingkat);
     if (!row) {
       row = emptyRow(entry.tingkat);
       rows.set(entry.tingkat, row);
     }
-    row.byCondition[entry.kondisi] += entry.panjang_km;
-    row.total += entry.panjang_km;
-    totals.byCondition[entry.kondisi] += entry.panjang_km;
-    totals.total += entry.panjang_km;
+    for (const target of [row, totals]) {
+      if (CONDITIONS.includes(entry.kondisi)) {
+        target.byCondition[entry.kondisi] += entry.panjang_km;
+      } else {
+        target.unknown += entry.panjang_km;
+      }
+      target.total += entry.panjang_km;
+    }
   }
 
   const rank = (level: string) => {
@@ -44,6 +47,10 @@ export function pivotRecap(entries: CanalRecap[]): RecapTable {
   };
   const ordered = [...rows.values()].sort((a, b) => rank(a.level) - rank(b.level) || a.level.localeCompare(b.level));
   return { rows: ordered, totals };
+}
+
+export function damagedLength(row: RecapRow): number {
+  return row.byCondition.rusak_ringan + row.byCondition.rusak_sedang + row.byCondition.rusak_berat;
 }
 
 /** Percentage, 0 when the whole is 0. */

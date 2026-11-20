@@ -21,6 +21,7 @@ export interface NetworkMapProps {
 // marker is larger than the symbol: room for the pointer and focus ring
 const MARKER_SIZE = 24;
 const SYMBOL_SIZE = 17;
+const SELECT_ZOOM = 14;
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -57,7 +58,7 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
     if (!container) {
       return;
     }
-    const map = L.map(container, { zoomControl: true, minZoom: 9, maxZoom: 18 }).setView([-7.64, 110.42], 12);
+    const map = L.map(container, { zoomControl: true, minZoom: 5, maxZoom: 18 }).setView([-7.64, 110.42], 12);
     map.attributionControl.setPrefix(false);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
@@ -221,8 +222,13 @@ export default function NetworkMap({ canals, plots, assets, selectedCode, highli
       marker.setZIndexOffset(selected ? 1000 : 0);
     }
     const marker = selectedCode ? markersRef.current.get(selectedCode) : undefined;
-    if (map && marker && !map.getBounds().pad(-0.15).contains(marker.getLatLng())) {
-      map.setView(marker.getLatLng(), Math.max(map.getZoom(), 14), { animate: !prefersReducedMotion() });
+    if (!map || !marker) {
+      return;
+    }
+    // zoom in from the overview, e.g. when arriving from the priority list
+    const tooFarOut = map.getZoom() < SELECT_ZOOM;
+    if (tooFarOut || !map.getBounds().pad(-0.15).contains(marker.getLatLng())) {
+      map.setView(marker.getLatLng(), Math.max(map.getZoom(), SELECT_ZOOM), { animate: !prefersReducedMotion() });
     }
   }, [selectedCode, assets]);
 

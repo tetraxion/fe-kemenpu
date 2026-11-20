@@ -1,0 +1,9 @@
+# Used only by ../docker-compose.yml, where backend and frontend share a network.
+services:
+  gateway:
+    environment:
+      BACKEND_URL: http://backend:8080
+    # nginx needs the backend name to resolve when it starts
+    depends_on:
+      backend:
+        condition: service_started

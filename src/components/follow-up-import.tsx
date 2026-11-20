@@ -55,6 +55,10 @@ export function FollowUpImport() {
   });
 
   function handleOpenChange(next: boolean) {
+    // closing mid-import would drop the result
+    if (!next && mutation.isPending) {
+      return;
+    }
     setOpen(next);
     if (!next) {
       mutation.reset();
@@ -65,6 +69,8 @@ export function FollowUpImport() {
 
   function chooseSource(next: Source) {
     setSource(next);
+    // the file input is remounted empty
+    setFile(null);
     mutation.reset();
   }
 

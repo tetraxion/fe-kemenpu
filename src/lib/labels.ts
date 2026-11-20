@@ -105,7 +105,7 @@ export function kindLabel(kind: string | null): string {
 }
 
 export function levelLabel(level: string | null): string {
-  if (!level) {
+  if (!level || level === "tidak_diketahui") {
     return "Tingkat tidak dikenal";
   }
   return LEVEL_LABELS[level] ?? level;

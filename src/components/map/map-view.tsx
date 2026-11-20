@@ -72,7 +72,8 @@ export function MapView() {
   );
   const clearSelection = useCallback(() => router.replace("/", { scroll: false }), [router]);
 
-  const layersFailed = canals.isError || plots.isError;
+  // a failed refetch keeps the map that is already drawn
+  const layersFailed = (canals.isError && !canals.data) || (plots.isError && !plots.data);
   const layersReady = canals.data && plots.data;
 
   return (
