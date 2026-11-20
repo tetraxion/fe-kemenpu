@@ -12,23 +12,33 @@ import { formatInteger } from "@/lib/format";
 import { CONDITIONS, CONDITION_LABELS, KINDS, KIND_LABELS, kindLabel } from "@/lib/labels";
 import type { Asset } from "@/lib/types";
 
+// fits the side panel without scrolling on a laptop screen
+const PAGE_SIZE = 6;
+
 export function AssetList({
   assets,
   total,
   filter,
   onFilterChange,
+  page,
+  onPageChange,
   onSelect,
 }: {
   assets: Asset[];
   total: number;
   filter: AssetFilter;
   onFilterChange: (filter: AssetFilter) => void;
+  page: number;
+  onPageChange: (page: number) => void;
   onSelect: (code: string) => void;
 }) {
   const searchId = useId();
   const kindId = useId();
   const conditionId = useId();
   const filtered = filter.search !== "" || filter.kind !== "" || filter.condition !== "";
+  const pageCount = Math.max(1, Math.ceil(assets.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount - 1);
+  const rows = assets.slice(current * PAGE_SIZE, (current + 1) * PAGE_SIZE);
 
   return (
     <div className="flex flex-col gap-4">
@@ -105,7 +115,7 @@ export function AssetList({
         />
       ) : (
         <ul className="flex flex-col divide-y divide-border rounded-lg border border-border">
-          {assets.map((asset) => (
+          {rows.map((asset) => (
             <li key={asset.kode_aset}>
               <button
                 type="button"
@@ -127,6 +137,20 @@ export function AssetList({
           ))}
         </ul>
       )}
+
+      {pageCount > 1 ? (
+        <nav aria-label="Halaman daftar bangunan" className="flex items-center justify-between gap-3">
+          <Button variant="outline" disabled={current === 0} onClick={() => onPageChange(current - 1)}>
+            Sebelumnya
+          </Button>
+          <span className="text-xs text-muted-foreground">
+            Halaman {current + 1} dari {pageCount}
+          </span>
+          <Button variant="outline" disabled={current >= pageCount - 1} onClick={() => onPageChange(current + 1)}>
+            Berikutnya
+          </Button>
+        </nav>
+      ) : null}
     </div>
   );
 }

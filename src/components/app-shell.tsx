@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { FollowUpImport } from "@/components/follow-up-import";
@@ -8,6 +9,7 @@ import { ImportGate, useHealth } from "@/components/import-gate";
 import { SideNav } from "@/components/side-nav";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+import { NAV_ITEMS } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 const STATUS: Record<string, { label: string; tone: string }> = {
@@ -32,6 +34,26 @@ function DataStatus() {
     >
       {shown.label}
     </span>
+  );
+}
+
+function CurrentPage() {
+  const pathname = usePathname();
+  const item = NAV_ITEMS.find((nav) => nav.href === pathname);
+  if (!item) {
+    return <div className="hidden flex-1 lg:block" />;
+  }
+  const Icon = item.icon;
+  return (
+    <div className="hidden min-w-0 flex-1 items-center gap-3 lg:flex">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-2-light text-brand-2">
+        <Icon aria-hidden="true" className="size-[18px]" />
+      </span>
+      <p className="flex min-w-0 flex-col">
+        <span className="truncate text-sm leading-tight font-semibold text-brand">{item.label}</span>
+        <span className="truncate text-xs text-muted-foreground">{item.hint}</span>
+      </p>
+    </div>
   );
 }
 
@@ -72,7 +94,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Menu aria-hidden="true" className="size-5" />
           </Button>
           <span className="min-w-0 flex-1 truncate text-sm font-semibold text-brand lg:hidden">Kondisi Jaringan Irigasi</span>
-          <div className="hidden flex-1 lg:block" />
+          <CurrentPage />
           <DataStatus />
           {ready ? <FollowUpImport /> : null}
         </header>

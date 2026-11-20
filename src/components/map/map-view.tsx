@@ -42,6 +42,8 @@ export function MapView() {
   });
 
   const [filter, setFilter] = useState<AssetFilter>(EMPTY_FILTER);
+  // kept here so the list reopens on the same page after a detail view
+  const [listPage, setListPage] = useState(0);
   // opening another structure drops the highlight
   const [highlightFor, setHighlightFor] = useState<string | null>(null);
   const highlighted = selectedCode !== null && highlightFor === selectedCode;
@@ -134,7 +136,12 @@ export function MapView() {
               assets={visibleAssets}
               total={assets.data.jumlah}
               filter={filter}
-              onFilterChange={setFilter}
+              onFilterChange={(next) => {
+                setFilter(next);
+                setListPage(0);
+              }}
+              page={listPage}
+              onPageChange={setListPage}
               onSelect={select}
             />
           </>
