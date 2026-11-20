@@ -114,7 +114,8 @@ export function MapView() {
         ref={panelRef}
         className="scrollbar-thin flex scroll-mt-16 flex-col gap-4 border-t border-border bg-card p-4 sm:p-5 lg:min-h-0 lg:w-[400px] lg:shrink-0 lg:overflow-y-auto lg:border-t-0 lg:border-l"
       >
-        <h1 className="text-xl leading-tight font-semibold text-brand">Peta jaringan</h1>
+        {/* on desktop the top bar already shows the page name */}
+        <h1 className="text-xl leading-tight font-semibold text-brand lg:sr-only">Peta jaringan</h1>
 
         {selectedCode ? (
           <AssetDetail

@@ -120,7 +120,7 @@ export function AssetList({
               <button
                 type="button"
                 onClick={() => onSelect(asset.kode_aset)}
-                className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-muted active:bg-brand-2-light"
+                className="flex w-full items-center gap-3 px-3 py-2 text-left transition-colors hover:bg-muted active:bg-brand-2-light"
               >
                 <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <span className="truncate text-[13px] font-semibold text-foreground">
