@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,6 +12,11 @@ export function SideNav({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="scrollbar-thin flex h-full flex-col gap-6 overflow-y-auto bg-sidebar px-4 py-5 text-sidebar-foreground">
+      {/* the logo text is navy, so it sits on a white plate */}
+      <div className="flex items-center rounded-lg bg-white px-3 py-2.5">
+        <Image src="/kemenpu.svg" alt="Kementerian Pekerjaan Umum" width={221} height={41} unoptimized priority className="h-8 w-auto" />
+      </div>
+
       <div className="flex flex-col gap-1 px-2.5">
         <span className="text-base leading-tight font-semibold">Kondisi Jaringan Irigasi</span>
         <span className="text-xs leading-normal text-sidebar-muted">Pemeliharaan aset irigasi</span>
@@ -29,7 +35,7 @@ export function SideNav({ onNavigate }: { onNavigate?: () => void }) {
               className={cn(
                 "flex min-h-11 items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] leading-snug transition-colors",
                 "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
-                active ? "bg-sidebar-primary font-semibold" : "hover:bg-sidebar-accent active:bg-sidebar-accent/70",
+                active ? "bg-sidebar-primary font-semibold text-brand" : "hover:bg-sidebar-accent active:bg-sidebar-accent/70",
               )}
             >
               <Icon className="size-[18px] shrink-0" aria-hidden="true" />

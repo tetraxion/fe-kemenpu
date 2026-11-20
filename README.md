@@ -62,12 +62,12 @@ gateway/                   nginx image: one address for the interface and the AP
 
 ## Design
 
-The visual language follows the SIMRS SPKD dashboard: navy sidebar, teal actions, Inter, 8px radius, tables with a tinted head and alternating rows. Two colours differ from it on purpose, both for contrast: the action teal is `#00747c` instead of `#008d96` (white text reaches 5.5:1 instead of 4.0:1), and muted text is `#566a79` instead of `#647887`.
+The colours follow the Kementerian Pekerjaan Umum identity: navy `#1b2a6b` for the sidebar and headings, a brighter blue `#24389a` for actions, and the yellow `#f5b82e` for the current menu item. The layout follows the SIMRS SPKD dashboard: sidebar, Inter, 8px radius, tables with a tinted head and alternating rows. Every text and background pair was checked against WCAG AA.
 
 - **Colour is never the only signal.** Canal condition also changes the dash pattern, canal level the line width, structure type the symbol shape, and every badge carries its wording.
 - **Light theme only.** The condition colours are tuned against a light base map.
 - **Every data view has a loading, an empty and an error state.**
 - **Keyboard.** Structure symbols on the map take focus and open with Enter or Space; the list next to the map reaches the same structures, including those without coordinates.
 - **The map is driven through Leaflet directly**, without a React binding: the map is created and removed in one effect and each layer has its own, so a change of selection redraws only what changed.
-- **No logo.** None was supplied, so the product name stands in as text.
+- **Logo.** The Kementerian Pekerjaan Umum logo in the sidebar is `public/kemenpu.svg`. Its lettering is navy, so it sits on a white plate.
 - **Base map tiles come from OpenStreetMap** and need internet access. Without it the canals, structures, plots and legend still render on a plain background.

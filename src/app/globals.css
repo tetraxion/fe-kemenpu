@@ -60,14 +60,14 @@
 :root {
   --radius: 0.5rem;
 
-  --brand: #06345d; /* navy: headings, sidebar */
-  --brand-hover: #124465;
-  --brand-light: #edf3f9;
-  /* darker than SIMRS #008d96, which gives white text only 4.0:1 */
-  --brand-2: #00747c;
-  --brand-2-hover: #005f66;
-  --brand-2-light: #eaf6f5; /* selected row, hint box */
-  --zebra: #fafcfd;
+  /* navy and yellow of the Kementerian PU identity */
+  --brand: #1b2a6b;
+  --brand-hover: #26378a;
+  --brand-light: #eef1fa;
+  --brand-2: #24389a;
+  --brand-2-hover: #1b2a6b;
+  --brand-2-light: #e9edfb;
+  --zebra: #fafbfd;
 
   --good: #23734e;
   --good-light: #eaf5ee;
@@ -86,32 +86,31 @@
   --map-plot: #5b8fb0;
   --map-impact: #d6336c;
 
-  --sidebar: #06345d;
+  --sidebar: #1b2a6b;
   --sidebar-foreground: #ffffff;
-  --sidebar-muted: #afcad8;
-  --sidebar-accent: #124465;
-  --sidebar-primary: #00747c;
+  --sidebar-muted: #c3cbe8;
+  --sidebar-accent: #26378a;
+  --sidebar-primary: #f5b82e;
 
-  --background: #f3f6f8;
-  --foreground: #173348;
+  --background: #f4f6fa;
+  --foreground: #1c2440;
   --card: #ffffff;
-  --card-foreground: #173348;
+  --card-foreground: #1c2440;
   --popover: #ffffff;
-  --popover-foreground: #173348;
-  --primary: #00747c;
+  --popover-foreground: #1c2440;
+  --primary: #24389a;
   --primary-foreground: #ffffff;
-  --secondary: #edf3f9;
-  --secondary-foreground: #06345d;
-  --muted: #edf3f9;
-  /* darker than SIMRS #647887 so small text passes 4.5:1 */
-  --muted-foreground: #566a79;
-  --accent: #edf3f9;
-  --accent-foreground: #06345d;
+  --secondary: #eef1f8;
+  --secondary-foreground: #1b2a6b;
+  --muted: #eef1f8;
+  --muted-foreground: #5a6379;
+  --accent: #eef1f8;
+  --accent-foreground: #1b2a6b;
   --destructive: #b43d43;
-  --border: #dfe7eb;
+  --border: #dfe3ee;
   /* field borders need 3:1 contrast */
-  --input: #7d93a1;
-  --ring: #00747c;
+  --input: #7f8aa6;
+  --ring: #24389a;
 }
 
 @layer base {
