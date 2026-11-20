@@ -28,6 +28,10 @@ export class ApiError extends Error {
   }
 }
 
+/** Multipart field and size limit of the optional follow-up upload; the server enforces both. */
+const UPLOAD_FIELD = "berkas";
+export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
 const NETWORK_MESSAGE = "Server tidak dapat dihubungi. Periksa apakah aplikasi masih berjalan.";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -70,7 +74,16 @@ export const api = {
   findings: () => request<FindingList>("/kualitas-data/temuan"),
   canalMap: () => request<CanalCollection>("/peta/saluran"),
   plotMap: () => request<PlotCollection>("/peta/petak"),
-  importFollowUp: () => request<FollowUpSummary>("/impor/susulan", { method: "POST" }),
+  /** Without a file the server reads laporan_susulan.xlsx from its data folder. */
+  importFollowUp: (file?: File) => {
+    if (!file) {
+      return request<FollowUpSummary>("/impor/susulan", { method: "POST" });
+    }
+    const form = new FormData();
+    form.append(UPLOAD_FIELD, file);
+    // No Content-Type header: the browser adds the multipart boundary itself.
+    return request<FollowUpSummary>("/impor/susulan", { method: "POST", body: form });
+  },
 };
 
 export const queryKeys = {
