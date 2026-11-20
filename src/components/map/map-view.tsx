@@ -80,7 +80,7 @@ export function MapView() {
     // No flex-1 here: a flex basis would override the fixed desktop height and
     // let the map grow as tall as the list next to it.
     <div className="flex flex-col lg:h-[calc(100dvh-4rem)] lg:flex-none lg:flex-row">
-      <section aria-label="Peta" className="relative h-[60dvh] min-h-80 shrink-0 lg:h-auto lg:min-w-0 lg:flex-1">
+      <section aria-label="Peta" className="relative isolate h-[60dvh] min-h-80 shrink-0 lg:h-auto lg:min-w-0 lg:flex-1">
         {layersFailed ? (
           <div className="p-4">
             <ErrorState
