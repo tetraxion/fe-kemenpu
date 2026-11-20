@@ -206,7 +206,26 @@ export function QualityView() {
                 note={findings.data.jumlah === 0 ? "Semua baris berkas sumber bersih." : "Ubah kata pencarian atau filter."}
               />
             ) : (
-              <TableFrame>
+              <ul className="flex flex-col gap-2 md:hidden">
+                {rows.map((finding, index) => (
+                  <li
+                    key={`${current}-${index}`}
+                    className="flex flex-col gap-1.5 rounded-lg border border-border bg-card p-3 text-[13px] leading-normal"
+                  >
+                    <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                      <span className="font-semibold text-foreground">{finding.pengenal}</span>
+                      <span className="text-xs text-muted-foreground">{finding.sumber}</span>
+                    </span>
+                    <span className="text-xs font-semibold text-brand-2">{categoryLabel(finding.kategori)}</span>
+                    <span>{finding.masalah}</span>
+                    <span className="text-muted-foreground">Tindakan: {finding.tindakan}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {filtered.length === 0 ? null : (
+              <TableFrame className="hidden md:block">
                 <Table className="min-w-[860px]">
                   <caption className="sr-only">Temuan kualitas data</caption>
                   <TableHeader>

@@ -69,7 +69,48 @@ export function PriorityView() {
       ) : null}
 
       {rows.length > 0 ? (
-        <TableFrame>
+        <ol className="flex flex-col gap-2 md:hidden">
+          {rows.map((row) => {
+            const asset = byCode.get(row.kode_aset);
+            return (
+              <li key={row.kode_aset}>
+                <Link
+                  href={`/?aset=${encodeURIComponent(row.kode_aset)}`}
+                  className="flex flex-col gap-2.5 rounded-lg border border-border bg-card p-3 active:bg-brand-2-light"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-semibold text-muted-foreground">
+                      {row.peringkat}
+                    </span>
+                    <span className="flex min-w-0 flex-1 flex-col">
+                      <span className="truncate text-sm font-semibold text-brand-2">
+                        {asset?.nomenklatur ?? row.kode_aset}
+                      </span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {row.kode_aset}
+                        {asset ? ` · ${kindLabel(asset.jenis)}` : ""}
+                      </span>
+                    </span>
+                    <ConditionBadge condition={row.kondisi} />
+                  </span>
+                  <span className="flex items-baseline justify-between gap-3 border-t border-border pt-2 text-xs text-muted-foreground">
+                    <span>
+                      Luas terdampak{" "}
+                      <span className="font-semibold text-foreground">{formatDecimal(row.luas_terdampak_ha)} ha</span>
+                    </span>
+                    <span>
+                      Skor <span className="font-semibold text-foreground">{formatDecimal(row.skor)}</span>
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+      ) : null}
+
+      {rows.length > 0 ? (
+        <TableFrame className="hidden md:block">
           <Table className="min-w-[640px]">
             <caption className="sr-only">Bangunan diurutkan dari skor prioritas terbesar</caption>
             <TableHeader>
