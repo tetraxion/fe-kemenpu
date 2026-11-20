@@ -14,7 +14,7 @@ make up                        # or: docker compose up --build -d
 
 The interface is at `http://localhost:8080`. This is its own Compose project, `fe-irrigation`, with two containers: `frontend` (the Next.js server) and `gateway` (nginx). The gateway serves the interface and forwards `/api`, `/swagger` and `/scalar` to the backend project through the port that project publishes on the host (`BACKEND_URL`, default `http://host.docker.internal:8081`). The browser therefore always calls the API with a relative `/api` address.
 
-Without the backend the pages still open, and `/api` answers `503` with a JSON error until it is started.
+Without the backend the pages still open, and `/api` answers `503` with a JSON error until it is started. `/api/health` is the exception: it answers `memuat`, since a backend that is still starting counts as loading.
 
 For development:
 
